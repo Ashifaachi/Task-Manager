@@ -12,19 +12,29 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+# Load environment variables
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*x+q$px-!0=@f=%l*c9zai8=4*8ouzb=ye=&npixvhw503yos0'
+# # SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = 'django-insecure-*x+q$px-!0=@f=%l*c9zai8=4*8ouzb=ye=&npixvhw503yos0'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Get SECRET_KEY from .env
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -104,10 +114,31 @@ WSGI_APPLICATION = 'to_do_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'taskmanager',
+#         'USER': 'postgres',
+#         'PASSWORD': '7383',
+#         'HOST': 'localhost',
+#         'PORT': '5432'
+#     }
+# }
+# Database configuration using .env variables
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -157,24 +188,27 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# # JWT settings
-# JWT_SECRET_KEY = 'your-secret-key'
-# JWT_ALGORITHM = 'HS256'
-# JWT_ACCESS_TOKEN_LIFETIME = timedelta(minutes=60)
-# JWT_REFRESH_TOKEN_LIFETIME = timedelta(days=30)
-# JWT_AUTH_HEADER_TYPES = ('Bearer',)
-# JWT_AUTH_TOKEN_CLASSES = ('rest_framework_simplejwt.authentication.JWTToken',)
-# JWT_AUTH_COOKIE = 'access_token'
+
 
 # JWT settings
 # 🛠 Adjust these settings as per your requirements
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),  # 🛠 Access token valid for 2 hours
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # 🛠 Refresh token valid for 7 days
+#     'ROTATE_REFRESH_TOKENS': True,  # 🛠 Refresh token rotatable
+#     'BLACKLIST_AFTER_ROTATION': True,  # 🛠 Old refresh token invalid after use
+#     'ALGORITHM': 'HS256',
+#     'SIGNING_KEY': 'your_secret_key',  # ⚠ Change this in production
+#     'AUTH_HEADER_TYPES': ('Bearer',),
+# }
+# JWT settings using .env
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),  # 🛠 Access token valid for 2 hours
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # 🛠 Refresh token valid for 7 days
-    'ROTATE_REFRESH_TOKENS': True,  # 🛠 Refresh token rotatable
-    'BLACKLIST_AFTER_ROTATION': True,  # 🛠 Old refresh token invalid after use
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': 'your_secret_key',  # ⚠ Change this in production
+    'SIGNING_KEY': os.getenv('JWT_SECRET_KEY'),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 

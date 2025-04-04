@@ -107,7 +107,9 @@ const Tasks = () => {
               <div>
                 <h5 className={task.completed ? "text-success" : ""}>{task.title}</h5>
                 <p>{task.description}</p>
-                <small className="text-muted">Due: {task.due_date} | Priority: {task.priority}</small>
+                <small className="text-muted">Due: {task.due_date} | Priority: {task.priority} |  Created : {task.created_at}   |  <span className={`fw-bold ${task.completed ? "text-success" : "text-danger"}`}>
+  {task.completed ? "✔ Completed" : "❌ Not Completed"}
+</span> |</small>
               </div>
               <div>
                 <button className={`btn btn-${task.completed ? "secondary" : "success"} btn-sm me-2`} onClick={() => handleCompleteTask(task.id, task.completed)}>{task.completed ? "Undo" : "Complete"}</button>
